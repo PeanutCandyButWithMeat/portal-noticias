@@ -1,0 +1,115 @@
+
+body {
+    font-family: 'Times New Roman', serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.old-english {
+    font-family: 'Old English Text MT', 'Times New Roman', serif;
+    font-size: 48px;
+    margin: 10px 0;
+}
+.edition-details {
+    font-style: italic;
+    margin: 5px 0;
+}
+.news-separator {
+    border-top: 3px double #000;
+    margin: 20px 0;
+}
+.main-news h2, .other-news h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+.date {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 15px;
+}
+.news-image {
+    max-width: 100%;
+    height: auto;
+    margin: 15px 0;
+    display: block;
+}
+.news-content {
+    text-align: justify;
+}
+.signature {
+    text-align: right;
+    font-style: italic;
+    margin-top: 15px;
+}
+footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+}
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px -10px;
+}
+.column {
+    flex: 1;
+    min-width: 300px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+.news-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.news-box h3 {
+    border-bottom: 1px solid #000;
+    padding-bottom: 5px;
+    margin-top: 0;
+    font-size: 20px;
+}
+.update-tag {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.movie-review {
+    background: #111;
+    color: #fff;
+    border-left: 4px solid #ff0000;
+    padding: 15px;
+    margin: 20px 0;
+}
+.movie-review h3 {
+    color: #ff0000;
+    margin-top: 0;
+}
+.movie-review h2 {
+    color: #fff;
+}
+.warning-box {
+    background: #ff0000;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    margin-top: 20px;
+}

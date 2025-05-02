@@ -1,0 +1,186 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Portal de notícias</title>
+    <link href="css/style-portal.css" rel="stylesheet" />
+    <script src="libs/xlsx.full.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="center">
+            <div class="about-header">
+                <p>O Diário - News</p>
+            </div>
+            <div class="wrapper-header">
+                <div class="header-content">
+                    <div class="logo">
+                        <h2><span></span>O Diário</h2>
+                    </div>
+                    <div class="banner-ads">
+                        <h2><span style="font-size: 23px;">Caixa de anúncio</span><br/><em>Insira um anúncio aqui</em></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="center">
+        <div class="menu-main">
+            <a href="#" onclick="mostrarSecao('home')">Home</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">Notícias</a>
+                <div class="dropdown-content">
+                    <div class="dropdown-submenu">
+                    <a href="#">Mainstream</a>
+                    <div class="dropdown-subcontent">
+                        <a href="#" onclick="mostrarSecao('cientifico')">Científico</a>
+                        <a href="#" onclick="mostrarSecao('investigativo')">Investigativo</a>
+                    </div>
+                    </div>
+                    <a href="#" onclick="mostrarSecao('indie')">Indie</a> <!-- Sem submenu -->
+                </div>
+            </div>              
+            <a href="#">Sobre</a>
+            <a href="#">Contato</a>
+        </div>
+    </div>
+
+    <!-- Seção Home (visível inicialmente) -->
+    <section class="noticias-1" id="home-section">
+        <div class="center">
+            <div class="noticias-wraper-1">
+                <div class="noticia-destaque">
+                    <div class="noticia-destaque-single" data-id="1">
+                        <h3>Notícia destaque</h3>
+                    </div>
+                </div>
+                <div class="outras-noticias-1">
+                    <div class="outra-noticia-1-single" data-id="3"><h3>Notícia 1</h3></div>
+                    <div class="outra-noticia-1-single" data-id="4"><h3>Notícia 2</h3></div>
+                    <div class="outra-noticia-1-single" data-id="5"><h3>Notícia 3</h3></div>
+                    <div class="outra-noticia-1-single" data-id="6"><h3>Notícia 4</h3></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Científico -->
+    <section class="noticias-1" id="cientifico-section" style="display:none;">
+        <div class="center">
+            <div class="noticias-wraper-1">
+                <div class="noticia-destaque">
+                    <div class="noticia-destaque-single"><h3></h3></div>
+                </div>
+                <div class="outras-noticias-1">
+                    <div class="outra-noticia-1-single"><h3></h3></div>
+                    <div class="outra-noticia-1-single"><h3></h3></div>
+                    <div class="outra-noticia-1-single"><h3></h3></div>
+                    <div class="outra-noticia-1-single"><h3></h3></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Investigativo -->
+    <section class="noticias-1" id="investigativo-section" style="display:none;">
+        <div class="center">
+            <div class="noticias-wraper-1">
+                <div class="noticia-destaque">
+                    <div class="noticia-destaque-single"><h3></h3></div>
+                </div>
+                <div class="outras-noticias-1">
+                    <div class="outra-noticia-1-single"><h3></h3></div>
+                    <div class="outra-noticia-1-single"><h3></h3></div>
+                    <div class="outra-noticia-1-single"><h3></h3></div>
+                    <div class="outra-noticia-1-single"><h3></h3></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCRIPT GERAL -->
+    <script>
+        let sheetDataGlobal = [];
+
+        fetch('./api/noticias.xlsx')
+        .then(response => response.arrayBuffer())
+        .then(data => {
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            sheetDataGlobal = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+            // Carrega dados iniciais (home)
+            carregarNoticias('home', sheetDataGlobal);
+        })
+        .catch(error => {
+            console.error('Erro ao carregar o Excel:', error);
+        });
+
+        function mostrarSecao(subcategoria) {
+            // Esconde todas as seções
+            document.querySelectorAll('.noticias-1').forEach(sec => sec.style.display = 'none');
+
+            const secao = document.getElementById(`${subcategoria}-section`);
+            if (secao) {
+                secao.style.display = 'block';
+
+                // Filtra por subcategoria, exceto home
+                const filtradas = (subcategoria === 'home')
+                    ? sheetDataGlobal
+                    : sheetDataGlobal.filter(n => (n.Subcategoria || '').toLowerCase() === subcategoria);
+
+                carregarNoticias(subcategoria, filtradas);
+            }
+        }
+
+        function carregarNoticias(secaoId, dados) {
+            dados.sort((a, b) => new Date(b.Data_publicacao) - new Date(a.Data_publicacao));
+            const container = document.getElementById(`${secaoId}-section`);
+            if (!container) return;
+
+            const destaque = container.querySelector('.noticia-destaque-single');
+            const outras = container.querySelectorAll('.outra-noticia-1-single');
+
+            if (destaque && dados[0]) {
+                destaque.style.backgroundImage = `url(${dados[0].Imagem_URL})`;
+                destaque.querySelector('h3').textContent = dados[0].Titulo;
+                destaque.onclick = () => window.open(dados[0].Conteudo, "_blank");
+            }
+
+            dados.slice(1).forEach((row, i) => {
+                if (outras[i]) {
+                    outras[i].style.backgroundImage = `url(${row.Imagem_URL})`;
+                    outras[i].querySelector('h3').textContent = row.Titulo;
+                    outras[i].onclick = () => window.open(row.Conteudo, "_blank");
+                }
+            });
+        }
+
+        // Dropdown toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.dropdown-toggle');
+
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const dropdown = toggle.parentElement;
+                    const content = dropdown.querySelector('.dropdown-content');
+
+                    // Fecha os outros
+                    document.querySelectorAll('.dropdown-content').forEach(dc => {
+                        if (dc !== content) dc.style.display = 'none';
+                    });
+
+                    content.style.display = content.style.display === 'flex' ? 'none' : 'flex';
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-content').forEach(dc => dc.style.display = 'none');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
